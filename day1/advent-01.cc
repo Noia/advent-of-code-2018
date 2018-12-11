@@ -3,7 +3,7 @@
 
 int main()
 {
-  std::ifstream in("01/input.txt");
+  std::ifstream in("day1/input.txt");
 
   if (!in)
   {
@@ -11,16 +11,17 @@ int main()
     return EXIT_FAILURE;
   }
 
-  std::string message;
-
-  if (!(in >> message))
-  {
-    std::cerr << "Can not read file content!";
-    return EXIT_FAILURE;
+  int frequency = 0;
+  //std::string line;
+  //while (std::getline(in, line)) {
+  for( std::string line; std::getline( in, line ); ) {
+    if (line.find("+") == 0) {
+      frequency += stoi(line.substr(1, line.length()));
+    } else {
+      frequency -= stoi(line.substr(1, line.length()));
+    }
   }
-
-  // Begin computing frequency.
-  
+  std::cout << "Frequency: " << frequency;
 
   return EXIT_SUCCESS;
 }

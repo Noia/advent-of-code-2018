@@ -16,3 +16,33 @@
 #     sha1 = "6027ceb1d1ae70a6a3fb1a8da2144632fa688604",
 #     sha1_src = "0993fa305c2281cd2b77dcbc410bdcc5c67c8686",
 # )
+
+#load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+# http_archive(
+#     name = "io_bazel_rules_rust",
+#     sha256 = "52b5e25d6b0378f9043ea02afbf10b77c1bfce880b1f9f10039618640c7ab57f",
+#
+#     urls = [
+#         "https://github.com/bazelbuild/rules_rust/archive/0.0.7.tar.gz",
+#     ],
+#     strip_prefix = "rules_rust-0.0.7"
+# )
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+git_repository(
+  name = "io_bazel_rules_rust",
+  commit = "23ab9d5ed7e78ed3c9fd2cf7627eaa6ea60742bf",
+  remote = "https://github.com/bazelbuild/rules_rust.git",
+)
+
+git_repository(
+    name = "bazel_skylib",
+    remote = "https://github.com/bazelbuild/bazel-skylib.git",
+    tag = "0.6.0",  # change this to use a different release
+)
+
+load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
+rust_repositories()
+
+load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
+bazel_version(name = "bazel_version")
