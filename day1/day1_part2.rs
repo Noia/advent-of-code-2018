@@ -14,8 +14,6 @@ fn find_stable_frequency() -> Result<i64> {
     let mut previous_frequencies = HashSet::new();
     previous_frequencies.insert(frequency);
 
-    let nums = vec![1, 2,3,4,5];
-
     loop {
         let file = File::open("day1/input02.txt")?;
         let file = BufReader::new(file);
