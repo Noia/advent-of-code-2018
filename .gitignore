@@ -3,4 +3,6 @@
 /bazel-*
 bazel-*
 build-tools/*
-third_party/*
+third_party/cargo/*
+!third_party/cargo/Cargo.toml
+!third_party/cargo/README.md
