@@ -12,7 +12,7 @@ fn main() -> Result<()> {
 }
 
 fn find_checksum() -> Result<String> {
-    let file = File::open("day2/input01.txt")?;
+    let file = File::open("02/input.txt")?;
     let file = BufReader::new(file);
     let mut prev: HashSet<String> = HashSet::new();
 

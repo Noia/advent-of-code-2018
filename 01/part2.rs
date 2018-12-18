@@ -15,7 +15,7 @@ fn find_stable_frequency() -> Result<i64> {
     previous_frequencies.insert(frequency);
 
     loop {
-        let file = File::open("day1/input02.txt")?;
+        let file = File::open("01/input.txt")?;
         let file = BufReader::new(file);
 
         for line in file.lines().filter_map(|result| result.ok()) {

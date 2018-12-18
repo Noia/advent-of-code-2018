@@ -3,7 +3,7 @@ use std::ops::AddAssign;
 use std::io::{BufRead, BufReader, Result};
 
 fn main() -> Result<()> {
-    let file = File::open("day1/input01.txt")?;
+    let file = File::open("01/input.txt")?;
     let mut frequency: i64 = 0;
 
     for line in BufReader::new(file).lines().filter_map(|result| result.ok()) {

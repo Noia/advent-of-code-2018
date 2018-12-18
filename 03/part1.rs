@@ -12,10 +12,10 @@ fn main() -> Result<()> {
 }
 
 fn find_overlaps() -> Result<i32> {
-    let file = File::open("day3/input.txt")?;
+    let file = File::open("03/input.txt")?;
     let file = BufReader::new(file);
     // Builds a map of string keys representing coordinates and values being the sum of inserts
-    // of the same key. 
+    // of the same key.
     let mut claims: HashMap<String, i32> = HashMap::new();
 
     for line in file.lines().filter_map(|result| result.ok()) {

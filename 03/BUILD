@@ -9,15 +9,15 @@ rust_library(
 )
 
 rust_binary(
-  name="day3_part1",
-  srcs=["day3_part1.rs"],
+  name="part1",
+  srcs=["part1.rs"],
   data=["input.txt"],
   deps=[":claim"]
 )
 
 rust_binary(
-  name="day3_part2",
-  srcs=["day3_part2.rs"],
+  name="part2",
+  srcs=["part2.rs"],
   data=["input.txt"],
   deps=[
     ":claim",

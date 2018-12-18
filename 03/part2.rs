@@ -53,7 +53,7 @@ fn find_unmatched() -> Vec<claim::Claim> {
 }
 
 fn read_claims() -> Result<Vec<claim::Claim>> {
-    let file = File::open("day3/input.txt")?;
+    let file = File::open("03/input.txt")?;
     let file = BufReader::new(file);
     let mut claims: Vec<Claim> = Vec::new();
 

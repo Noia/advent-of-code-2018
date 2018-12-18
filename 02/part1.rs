@@ -9,7 +9,7 @@ fn main() -> Result<()> {
 }
 
 fn find_checksum() -> Result<()> {
-    let file = File::open("day2/input01.txt")?;
+    let file = File::open("02/input.txt")?;
     let file = BufReader::new(file);
     let mut twos = 0;
     let mut threes = 0;
