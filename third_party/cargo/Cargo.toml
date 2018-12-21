@@ -17,5 +17,6 @@ workspace_path = "//third_party/cargo"
 
 # The target to generate BUILD rules for.
 target = "x86_64-unknown-linux-gnu"
+#target = "arm-unknown-linux-gnueabihf"
 
 [raze.crates.scan_fmt.'0.1.3']
