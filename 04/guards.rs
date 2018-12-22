@@ -8,36 +8,36 @@ use std::fmt;
 use std::fmt::Display;
 use std::num::Wrapping;
 
-#[derive(Debug, PartialEq, Eq, Copy)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum Event {
     BEGIN_SHIFT,
     WAKE_UP,
     FALL_ASLEEP
 }
 
-#[derive(Debug, PartialEq, Eq, Copy)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub enum GuardState {
     AWAKE,
     ASLEEP
 }
 
-#[derive(Debug, PartialEq, Eq, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct RecordFragment {
-    pub date_time: str,
-    pub date: str,
-    pub time: str,
+    pub date_time: String,
+    pub date: String,
+    pub time: String,
     pub guard_id: Option<u32>,
     pub event: Event
 }
 
-#[derive(Debug, PartialEq, Eq, Copy)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub struct GuardStateSpan {
     pub state: GuardState,
     pub start: u32,
     pub end: u32
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct DatedGuardRecord {
     pub date: String,
     pub guard_id: u32,
