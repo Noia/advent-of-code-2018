@@ -68,6 +68,7 @@ impl RecordFragment {
         let (date_time, record_value) = scan_fmt!(
             from,
             // [1518-03-19 00:00]
+            // [1518-04-12 00:36] falls asleep
             "[{/\\d+-\\d+-\\d+ \\d+:\\d+/}] {/.*/}",
             String, String
         );
@@ -75,7 +76,7 @@ impl RecordFragment {
         let (date, time) = scan_fmt!(
             &date_time_str,
             // [1518-03-19 00:00]
-            "{/\\d+-\\d+-\\d+} {\\d+:\\d+/}",
+            "{/\\d+-\\d+-\\d+/} {/\\d+:\\d+/}",
             String, String
         );
         let record_raw = record_value.unwrap();
