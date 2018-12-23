@@ -4,7 +4,8 @@ rust_library(
   name="guards",
   srcs=["guards.rs"],
   deps=[
-    "//third_party/cargo:scan_fmt"
+    "//third_party/cargo:scan_fmt",
+    "//third_party/cargo:chrono"
   ]
 )
 rust_binary(
@@ -13,11 +14,7 @@ rust_binary(
   data=["input.txt"],
   deps=[
     ":guards",
-    "//third_party/cargo:scan_fmt"
+    "//third_party/cargo:scan_fmt",
+    "//third_party/cargo:chrono"
   ]
-)
-
-rust_binary(
-  name="hello",
-  srcs=["hello.rs"],
 )

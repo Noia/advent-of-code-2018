@@ -1,117 +1,78 @@
+extern crate chrono;
 extern crate guards;
 
-use guards::{DatedGuardRecord, Event, GuardState, GuardStateSpan, RecordFragment};
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Timelike};
+use guards::{DatedGuardRecord, Event, GuardReport, GuardState, GuardStateSpan, RecordFragment};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Result};
 
 fn main() {
-    for record in parse_fragments_to_schedule().iter() {
-        println!("{:?}", record);
+    let mut laziest_guard: Option<GuardReport> = None;
+
+    for record in read_input().unwrap().iter() {
+        if laziest_guard.is_none() {
+            laziest_guard = Some(record.clone());
+            continue;
+        }
+        // Computing this every time is lazy in and of itself.
+        let lazy_guard_time = laziest_guard
+            .as_ref()
+            .unwrap()
+            .minutes_in_state(GuardState::ASLEEP);
+        let other_guard_time = record.minutes_in_state(GuardState::ASLEEP);
+        if other_guard_time > lazy_guard_time {
+            laziest_guard = Some(record.clone());
+        }
     }
+    if laziest_guard.is_some() {
+        println!(
+            "{:?} {:?} minutes asleep",
+            laziest_guard,
+            laziest_guard
+                .as_ref()
+                .unwrap()
+                .minutes_in_state(GuardState::ASLEEP)
+        );
+    } else {
+        panic!("Failed to find a lazy guard!");
+    }
+
+    let laziest_guard: GuardReport = laziest_guard.unwrap();
+    let mut asleep_by_hour: HashMap<u32, u32> = HashMap::new();
+    laziest_guard
+        .records
+        .iter()
+        .flat_map(|r| &r.events)
+        .filter(|e| e.state == GuardState::ASLEEP)
+        .flat_map(|e| std::ops::Range {
+            start: e.start.minute(),
+            end: e.end.minute(),
+        })
+        .for_each(|r| *asleep_by_hour.entry(r).or_insert(0) += 1);
+    let (sleepiest_minute, how_often_asleep) = asleep_by_hour
+        .iter()
+        .max_by(|(_, a), (_, b)| a.cmp(b))
+        .unwrap();
+    println!("\nMap of times{:?}", asleep_by_hour);
+    println!(
+        "\n#{} Found asleep {} times at 00:{} result key {}",
+        laziest_guard.guard_id,
+        how_often_asleep,
+        sleepiest_minute,
+        (sleepiest_minute * laziest_guard.guard_id)
+    );
 }
 
-fn read_input() -> Result<Vec<RecordFragment>> {
+fn read_input() -> Result<Vec<GuardReport>> {
     let file = File::open("04/input.txt")?;
     let file = BufReader::new(file);
     let mut records: Vec<RecordFragment> = Vec::new();
     for line in file.lines().filter_map(|result| result.ok()) {
         records.push(RecordFragment::new(&line));
     }
-    records.sort();
-    return Ok(records);
-}
 
-fn finalize_guard_record(last_record: &RecordFragment, current_guard_spans: &mut Vec<GuardStateSpan>, current_guard_id: u32) -> DatedGuardRecord {
-    match last_record.event {
-        Event::FALL_ASLEEP => {
-            current_guard_spans.push(GuardStateSpan {
-                state: GuardState::ASLEEP,
-                start: 00, // TODO: Derive from last_time
-                end: 59,   // TODO: Derive from last_time
-            })
-        }
-        Event::WAKE_UP => {
-            current_guard_spans.push(GuardStateSpan {
-                state: GuardState::AWAKE,
-                start: 00, // TODO: Derive from last_time
-                end: 59,   // TODO: Derive from last_time
-            })
-        }
-        Event::BEGIN_SHIFT => {
-            // Guard never fell asleep.
-            current_guard_spans.push(GuardStateSpan {
-                state: GuardState::AWAKE,
-                start: 00,
-                end: 59,
-            })
-        }
-    }
-    return DatedGuardRecord {
-        date: last_record.date.to_string(), // TODO: Derive from last_time
-        guard_id: current_guard_id,
-        events: current_guard_spans.to_vec(),
-    };
-}
-
-fn parse_fragments_to_schedule() -> Vec<DatedGuardRecord> {
-    let records: Vec<RecordFragment> = read_input().unwrap_or(Vec::new());
-
-    let mut guard_records: Vec<DatedGuardRecord> = Vec::new();
-
-    let mut _current_guard_id: Option<&u32> = None;
-    let mut _current_guard_spans: Vec<GuardStateSpan> = Vec::new();
-    let mut _last_record: Option<&RecordFragment> = None;
-
-    // Walk record fragments in order to build a proper log.
-    for record in records.iter() {
-        match record.event {
-            Event::BEGIN_SHIFT => {
-                if _current_guard_id.is_some() {
-                    // finish off previous guard record.
-                    if _last_record.is_some() {
-                        guard_records.push(finalize_guard_record(_last_record.as_ref().unwrap(), &mut _current_guard_spans, *_current_guard_id.unwrap()));
-                    }
-                }
-                _current_guard_id = record.guard_id.as_ref();
-                _current_guard_spans = Vec::new();
-                _last_record = None
-            }
-            Event::FALL_ASLEEP => {
-                if _last_record.is_some() {
-                    if _last_record.unwrap().event == Event::WAKE_UP {
-                        // start span for sleep, close previous span for awake
-                        let last_time = &_last_record.unwrap().time;
-                        _current_guard_spans.push(GuardStateSpan {
-                            state: GuardState::AWAKE,
-                            start: 00, // TODO: Derive from last_time
-                            end: 01,   // TODO: Derive from last_time
-                        })
-                    } else {
-                        panic!(
-                            "Unexpected event {} before FALL_ASLEEP",
-                            _last_record.unwrap().event
-                        );
-                    }
-                }
-                _last_record = Some(record);
-            }
-            Event::WAKE_UP => {
-                if _last_record.is_some() {
-                    let last_record = _last_record.unwrap();
-                    if last_record.event == Event::FALL_ASLEEP {
-                        // start span for awake, close span for sleep
-                        _current_guard_spans.push(GuardStateSpan {
-                            state: GuardState::AWAKE,
-                            start: 00, // TODO: Derive from last_time
-                            end: 01,   // TODO: Derive from last_time
-                        })
-                    } else {
-                        panic!("Unexpected event {} before WAKE_UP", last_record.event);
-                    }
-                }
-                _last_record = Some(record);
-            }
-        }
-    }
-    return guard_records;
+    return Ok(guards::to_guard_reports(guards::to_dated_guard_records(
+        records,
+    )));
 }
