@@ -1,8 +1,8 @@
 extern crate chrono;
 extern crate guards;
 
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Timelike};
-use guards::{DatedGuardRecord, Event, GuardReport, GuardState, GuardStateSpan, RecordFragment};
+use chrono::Timelike;
+use guards::{GuardReport, GuardState, RecordFragment};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Result};
