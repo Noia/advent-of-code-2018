@@ -8,9 +8,21 @@ rust_library(
     "//third_party/cargo:chrono"
   ]
 )
+
 rust_binary(
   name="part1",
   srcs=["part1.rs"],
+  data=["input.txt"],
+  deps=[
+    ":guards",
+    "//third_party/cargo:scan_fmt",
+    "//third_party/cargo:chrono"
+  ]
+)
+
+rust_binary(
+  name="part2",
+  srcs=["part2.rs"],
   data=["input.txt"],
   deps=[
     ":guards",
