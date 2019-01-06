@@ -1,14 +1,17 @@
 extern crate claim;
 
+use claim::Claim;
 use std::collections::HashSet;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Result};
-use claim::Claim;
 
 fn main() {
     let singleton_claim = find_unmatched();
     if singleton_claim.len() == 1 {
-        println!("Found the single claim. {}", singleton_claim.get(0).unwrap().id);
+        println!(
+            "Found the single claim. {}",
+            singleton_claim.get(0).unwrap().id
+        );
         return;
     }
     if singleton_claim.len() == 0 {
@@ -44,9 +47,15 @@ fn find_unmatched() -> Vec<claim::Claim> {
         }
     }
 
-    println!("{} out of {} ({}) has overlaps", has_match.len(), claims.len(), claims.len()-has_match.len());
+    println!(
+        "{} out of {} ({}) has overlaps",
+        has_match.len(),
+        claims.len(),
+        claims.len() - has_match.len()
+    );
 
-    claims.iter()
+    claims
+        .iter()
         .filter(|&c| !has_match.contains(&c.id))
         .for_each(|c| diff.push(c.clone()));
     return diff;
@@ -64,5 +73,4 @@ fn read_claims() -> Result<Vec<claim::Claim>> {
         claims.push(Claim::new(&line));
     }
     return Ok(claims);
-
 }

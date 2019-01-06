@@ -1,8 +1,7 @@
 use std::collections::HashSet;
 use std::fs::File;
-use std::ops::AddAssign;
 use std::io::{BufRead, BufReader, Result};
-
+use std::ops::AddAssign;
 
 fn main() -> Result<()> {
     find_stable_frequency();
