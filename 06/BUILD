@@ -5,15 +5,7 @@ rust_binary(
   srcs=["part1.rs"],
   data=["input.txt"],
   deps=[
-  "//third_party/cargo:regex"
+  "//third_party/cargo:scan_fmt",
   ]
-)
 
-rust_binary(
-  name="part2",
-  srcs=["part2.rs"],
-  data=["input.txt"],
-  deps=[
-  "//third_party/cargo:regex"
-  ]
 )

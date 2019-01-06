@@ -9,6 +9,7 @@ path = "fake_lib.rs"
 [dependencies]
 scan_fmt = "0.1.3"
 chrono = "0.4.6"
+regex = "1.1.0"
 
 
 [raze]
@@ -23,3 +24,5 @@ target = "x86_64-unknown-linux-gnu"
 [raze.crates.scan_fmt.'0.1.3']
 
 [raze.crates.chrono.'0.4.6']
+
+[raze.crates.regex.'1.1.0']

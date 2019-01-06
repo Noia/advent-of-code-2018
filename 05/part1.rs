@@ -1,33 +1,37 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader, Result};
+extern crate regex;
+use regex::Regex;
 
 fn main() {
-    for s in read_input().unwrap() {
-        let c = s.chars();
-        let len = s.len();
-        println!("{}", len);
-    }
-    for pair in split_tokens() {
-        println!("{}", pair);
-    }
+    let re = Regex::new(&split_tokens()).unwrap();
 
-
+    let input: String = read_input().unwrap().get(0).unwrap().to_string();
+    let mut collapsed_string = input.to_string();
+    loop {
+        let after_split: String = re.split(&collapsed_string).collect::<Vec<_>>().join("");
+        if after_split.len() == collapsed_string.len() {
+            collapsed_string = after_split;
+            break;
+        }
+        collapsed_string = after_split;
+    }
+    println!("{} to {}", input.len(), collapsed_string.len());
 }
 
-fn split_tokens() -> Vec<String> {
+fn split_tokens() -> String {
     //let range = std::ops::Range { start: 'a', end: 'z' };
     let mut ret: Vec<String> = Vec::new();
-
-    for c in  {
-        println!("{}", len);
+    let chars = "abcdefghijklmnopqrstuvwxyz".chars();
+    for c in chars {
         let mut a = c.to_string();
         let mut b = c.to_uppercase().to_string();
-        a.push_str(c.to_uppercase();
-        b.push_str(c.to_string());
+        a.push_str(&c.to_uppercase().to_string());
+        b.push_str(&c.to_string());
         ret.push(a);
         ret.push(b);
     }
-    return ret;
+    return ret.join("|");
 }
 
 fn read_input() -> Result<Vec<String>> {
